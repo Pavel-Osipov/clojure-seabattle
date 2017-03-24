@@ -134,27 +134,11 @@
 (defn show-board
   "Shows the board state. Used for debug purposes only"
   [board]
-  (loop [n 0
-         m 0]
-    (if (> n 11)
-      true
-      (do
-        (cond
-          (is-cell-empty? board n m) (print ".")
-          (is-cell-busy? board n m) (print "#")
-          :default (print "*")
-          )
-        (if (= m 11)
-          (do
-            (println)
-            (recur (inc n) 0)
-          )
-          (recur n (inc m))
-      )))))
+  (println (make-board-text board)))
 
 
 
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (println (make-board-text (make-border (make-empty-board)))))
