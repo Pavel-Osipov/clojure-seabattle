@@ -31,7 +31,7 @@
                ans true]
       (if (> d size)
           ans
-          (recur (inc r) (inc d) (and ans (or (is-cell-empty? board r col ) (is-cell-busy? board r col)))))))
+          (recur (inc r) (inc d) (and ans (is-cell-empty? board r col ))))))
 
 (defn can-place-ship-horizontal?
   "Tests if ship with given size can be placed horizontally with given left point"
@@ -51,10 +51,14 @@
   [board ship-type ship-size start other]
   (loop [new-board board
          d 1
-         n start
+         n (dec start)
          m other]
-    (if (> d ship-size)
-      new-board
+    (if (> d (+ ship-size 2))
+      (if (= ship-type :hor)
+          (assoc new-board (vector m (dec start)) :busy
+                           (vector m (+ start ship-size)) :busy)
+          (assoc new-board (vector (dec start) m) :busy
+                           (vector (+ start ship-size) m) :busy))
       (recur (if (= ship-type :hor)
                  (assoc new-board (vector (dec m) n) :busy
                                   (vector (inc m) n) :busy)
