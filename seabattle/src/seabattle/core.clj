@@ -46,10 +46,23 @@
 
 
 (defn surround-ship
-  "Surround the given ship with :busy cells"
-  [board ]
-  true
-  )
+  "Surround the given ship with :busy cells.
+  Returns new board."
+  [board ship-type ship-size start other]
+  (loop [new-board board
+         d 1
+         n start
+         m other]
+    (if (> d ship-size)
+      new-board
+      (recur (if (= ship-type :hor)
+                 (assoc new-board (vector (dec m) n) :busy
+                                  (vector (inc m) n) :busy)
+                 (assoc new-board (vector n (dec m)) :busy
+                                  (vector n (inc m)) :busy))
+             (inc d)
+             (inc n)
+             m))))
 
 (defn place-ship-vertical
   "Places ship vertically, assumed that it's possible
@@ -60,7 +73,7 @@
          r start-row
          c ncol]
     (if (> d ship-size)
-      new-board
+      (surround-ship new-board :vert ship-size start-row ncol)
       (recur (assoc new-board (vector r c) :ship-alive)
              (inc d)
              (inc r)
@@ -76,7 +89,7 @@
          r nrow
          c start-col]
     (if (> d ship-size)
-      new-board
+      (surround-ship new-board :hor ship-size start-col nrow)
       (recur (assoc new-board (vector r c) :ship-alive)
              (inc d)
              r
