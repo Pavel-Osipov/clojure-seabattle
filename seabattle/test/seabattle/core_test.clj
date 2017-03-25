@@ -1,6 +1,7 @@
 (ns seabattle.core-test
   (:require [clojure.test :refer :all]
-            [seabattle.core :refer :all]))
+            [seabattle.core :refer :all]
+            [seabattle.setup :refer :all]))
 
 
 (def empty-board
