@@ -23,7 +23,7 @@
   [board n m]
   (= :ship-dead (get  board (vector n m ))))
 
-(defn can-place-ship-vertical
+(defn can-place-ship-vertical?
   "Tests if ship with given size can be placed vertically with given top point"
   [board toprow col size]
    (loop [r toprow
@@ -33,7 +33,7 @@
           ans
           (recur (inc r) (inc d) (and ans (or (is-cell-empty? board r col ) (is-cell-busy? board r col)))))))
 
-(defn can-place-ship-horizontal
+(defn can-place-ship-horizontal?
   "Tests if ship with given size can be placed horizontally with given left point"
   [board row leftcol size]
 ;;   (loop [c leftcol
@@ -44,39 +44,62 @@
 ;;          (recur (inc r) (inc d) (and ans (or (is-cell-empty? board r col ) (is-cell-busy? board r col))))))
   )
 
-(defn place-4-ship-vertical
-  "Places 4-cell ship vertically, it's assumed this ship will be first, so function is to be called on empty board. Returs new board."
-  [board]
-  (let [row (inc (rand-int 7))
-           col (inc (rand-int 10))]
 
-    ))
+(defn surround-ship
+  "Surround the given ship with :busy cells"
+  [board ]
+  true
+  )
+
+(defn place-ship-vertical
+  "Places ship vertically, assumed that it's possible
+  Returs new board."
+  [board ship-size start-row ncol]
+  (loop [new-board board
+         d 1
+         r start-row
+         c ncol]
+    (if (> d ship-size)
+      new-board
+      (recur (assoc new-board (vector r c) :ship-alive)
+             (inc d)
+             (inc r)
+             c))))
 
 
-(defn place-4-ship-horizontal
-  "Places 4-cell ship horizontally, it's assumed this ship will be first, so function is to be called on empty board. Returs new board."
-  [board]
-  (let [row (inc (rand-int 10))
-           col (inc (rand-int 7))]
-
-    ))
-
+(defn place-ship-horizontal
+  "Places 4-cell ship horizontally, assumed that it's possible
+  Returs new board."
+  [board ship-size start-col nrow]
+  (loop [new-board board
+         d 1
+         r nrow
+         c start-col]
+    (if (> d ship-size)
+      new-board
+      (recur (assoc new-board (vector r c) :ship-alive)
+             (inc d)
+             r
+             (inc c)))))
 
 (defn place-4-ship
-   "Places 4-cell ship on  the board, and returns new board"
+   "Places 4-cell ship on the board, and returns new board.
+   It's assumed that such ships will be placed first."
   [board]
-  (let [direction  (rand-int 2)]
+  (let [direction  (rand-int 2)
+        other (inc (rand-int 10))
+        start (inc (rand-int 7))]
     (cond
-      (= 0 direction) (place-4-ship-vertical board)
-      (= 1 direction) (place-4-ship-horizontal board)
-      :default (println "\n Some error happened")
-      )))
+      (= 0 direction) (place-ship-vertical board 4 start other)
+      (= 1 direction) (place-ship-horizontal board 4 start other))))
+
 
 (defn place-3-ship
    "Places 3-cell ship on  the board, and returns new board"
   [board]
 
   )
+
 
 (defn place-2-ship
    "Places 3-cell ship on  the board, and returns new board"
@@ -92,7 +115,6 @@
 
   )
 
-
 (defn make-board-text
   "Prepares the board as single strings and return that string"
   [board]
@@ -102,9 +124,11 @@
     (if (> n 11)
       board-s
         (if (<= m 11)
-          (recur n (inc m) (if (is-cell-busy? board n m)
-                             (str board-s "#")
-                             (str board-s ".")))
+          (recur n (inc m) (cond
+                             (is-cell-busy? board n m) (str board-s "#")
+                             (is-cell-empty? board n m) (str board-s ".")
+                             (is-cell-alive? board n m) (str board-s "@")
+                             (is-cell-dead? board n m) (str board-s "*")))
           (recur (inc n) 0 (str board-s "\n"))))))
 
 
@@ -114,8 +138,7 @@
   (println (make-board-text board)))
 
 
-
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println (make-board-text (make-border (make-empty-board)))))
+  (println (make-board-text (place-4-ship (make-border (make-empty-board))))))
