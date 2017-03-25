@@ -27,23 +27,24 @@
   "Tests if ship with given size can be placed vertically with given top point"
   [board toprow col size]
    (loop [r toprow
-                d 1
-               ans true]
+          d 1
+          ans true]
       (if (> d size)
           ans
-          (recur (inc r) (inc d) (and ans (is-cell-empty? board r col ))))))
+          (recur (inc r) (inc d) (and ans (is-cell-empty? board r col))))))
 
 (defn can-place-ship-horizontal?
   "Tests if ship with given size can be placed horizontally with given left point"
   [board row leftcol size]
-;;   (loop [c leftcol
-;;                d 1
-;;               ans true]
-;;      (if (> d size)
-;;         ans
-;;          (recur (inc r) (inc d) (and ans (or (is-cell-empty? board r col ) (is-cell-busy? board r col))))))
-  )
+   (loop [c leftcol
+          d 1
+          ans true]
+      (if (> d size)
+         ans
+          (recur (inc c) (inc d) (and ans (is-cell-empty? board row c) )))))
 
+
+;; TODO create general func to place ship of any size
 
 (defn place-4-ship
    "Places 4-cell ship on the board, and returns new board.
@@ -56,27 +57,6 @@
       (= 0 direction) (place-ship-vertical board 4 start other)
       (= 1 direction) (place-ship-horizontal board 4 start other))))
 
-
-(defn place-3-ship
-   "Places 3-cell ship on  the board, and returns new board"
-  [board]
-
-  )
-
-
-(defn place-2-ship
-   "Places 3-cell ship on  the board, and returns new board"
-  [board]
-
-  )
-
-
-(defn place-1-ship
-   "Places 3-cell ship on  the board, and returns new board"
-  [board]
-
-
-  )
 
 (defn make-board-text
   "Prepares the board as single strings and return that string"

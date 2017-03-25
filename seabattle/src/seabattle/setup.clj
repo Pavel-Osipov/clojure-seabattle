@@ -20,10 +20,10 @@
          new-board board]
     (if (> x 11)
       new-board
-      (recur (inc x) (assoc new-board (vector x 0 ) :busy
-                                      (vector 0 x ) :busy
+      (recur (inc x) (assoc new-board (vector x 0 )  :busy
+                                      (vector 0 x )  :busy
                                       (vector x  11) :busy
-                                      (vector  11 x)  :busy)))))
+                                      (vector  11 x) :busy)))))
 
 (defn surround-ship
   "Surround the given ship with :busy cells.
