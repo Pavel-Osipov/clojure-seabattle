@@ -27,73 +27,24 @@
   "Tests if ship with given size can be placed vertically with given top point"
   [board toprow col size]
    (loop [r toprow
-                d 1
-               ans true]
+          d 1
+          ans true]
       (if (> d size)
           ans
-          (recur (inc r) (inc d) (and ans (or (is-cell-empty? board r col ) (is-cell-busy? board r col)))))))
+          (recur (inc r) (inc d) (and ans (is-cell-empty? board r col))))))
 
 (defn can-place-ship-horizontal?
   "Tests if ship with given size can be placed horizontally with given left point"
   [board row leftcol size]
-;;   (loop [c leftcol
-;;                d 1
-;;               ans true]
-;;      (if (> d size)
-;;         ans
-;;          (recur (inc r) (inc d) (and ans (or (is-cell-empty? board r col ) (is-cell-busy? board r col))))))
-  )
+   (loop [c leftcol
+          d 1
+          ans true]
+      (if (> d size)
+         ans
+          (recur (inc c) (inc d) (and ans (is-cell-empty? board row c) )))))
 
 
-(defn surround-ship
-  "Surround the given ship with :busy cells.
-  Returns new board."
-  [board ship-type ship-size start other]
-  (loop [new-board board
-         d 1
-         n start
-         m other]
-    (if (> d ship-size)
-      new-board
-      (recur (if (= ship-type :hor)
-                 (assoc new-board (vector (dec m) n) :busy
-                                  (vector (inc m) n) :busy)
-                 (assoc new-board (vector n (dec m)) :busy
-                                  (vector n (inc m)) :busy))
-             (inc d)
-             (inc n)
-             m))))
-
-(defn place-ship-vertical
-  "Places ship vertically, assumed that it's possible
-  Returs new board."
-  [board ship-size start-row ncol]
-  (loop [new-board board
-         d 1
-         r start-row
-         c ncol]
-    (if (> d ship-size)
-      (surround-ship new-board :vert ship-size start-row ncol)
-      (recur (assoc new-board (vector r c) :ship-alive)
-             (inc d)
-             (inc r)
-             c))))
-
-
-(defn place-ship-horizontal
-  "Places 4-cell ship horizontally, assumed that it's possible
-  Returs new board."
-  [board ship-size start-col nrow]
-  (loop [new-board board
-         d 1
-         r nrow
-         c start-col]
-    (if (> d ship-size)
-      (surround-ship new-board :hor ship-size start-col nrow)
-      (recur (assoc new-board (vector r c) :ship-alive)
-             (inc d)
-             r
-             (inc c)))))
+;; TODO create general func to place ship of any size
 
 (defn place-4-ship
    "Places 4-cell ship on the board, and returns new board.
@@ -106,27 +57,6 @@
       (= 0 direction) (place-ship-vertical board 4 start other)
       (= 1 direction) (place-ship-horizontal board 4 start other))))
 
-
-(defn place-3-ship
-   "Places 3-cell ship on  the board, and returns new board"
-  [board]
-
-  )
-
-
-(defn place-2-ship
-   "Places 3-cell ship on  the board, and returns new board"
-  [board]
-
-  )
-
-
-(defn place-1-ship
-   "Places 3-cell ship on  the board, and returns new board"
-  [board]
-
-
-  )
 
 (defn make-board-text
   "Prepares the board as single strings and return that string"
