@@ -8,20 +8,24 @@
   [board n m]
   (= :empty (get  board (vector n m ))))
 
+
 (defn is-cell-busy?
   "Tests if given cell on the board is busy"
   [board n m]
   (= :busy (get  board (vector n m ))))
+
 
 (defn is-cell-alive?
   "Tests if given cell on the board is alive part of the ship"
   [board n m]
   (= :ship-alive (get  board (vector n m ))))
 
+
 (defn is-cell-dead?
   "Tests if given cell on the board is dead part of the ship"
   [board n m]
   (= :ship-dead (get  board (vector n m ))))
+
 
 (defn can-place-ship-vertical?
   "Tests if ship with given size can be placed vertically with given top point"
@@ -33,6 +37,7 @@
           ans
           (recur (inc r) (inc d) (and ans (is-cell-empty? board r ncol))))))
 
+
 (defn can-place-ship-horizontal?
   "Tests if ship with given size can be placed horizontally with given left point"
   [board nrow leftcol ship-size]
@@ -41,7 +46,7 @@
           ans true]
       (if (> d ship-size)
           ans
-          (recur (inc c) (inc d) (and ans (is-cell-empty? board nrow c) )))))
+          (recur (inc c) (inc d) (and ans (is-cell-empty? board nrow c))))))
 
 
 (defn place-ship
@@ -59,7 +64,24 @@
                           (place-ship board ship-size)))))
 
 
-(defn make-board-text
+(defn setup-board
+  "Takes no parameters, returns border with all the ships on"
+  []
+  (->  (make-empty-board)
+       (make-border)
+       (place-ship 4)
+       (place-ship 3)
+       (place-ship 3)
+       (place-ship 2)
+       (place-ship 2)
+       (place-ship 2)
+       (place-ship 1)
+       (place-ship 1)
+       (place-ship 1)
+       (place-ship 1)))
+
+
+(defn make-board-debug-text
   "Prepares the board as single strings and return that string"
   [board]
   (loop [n 0
@@ -76,25 +98,27 @@
           (recur (inc n) 0 (str board-s "\n"))))))
 
 
-(defn show-board
-  "Shows the board state. Used for debug purposes only"
+(defn make-board-user-text
+  "Prepares the board as single strings and return that string"
   [board]
-  (println (make-board-text board)))
+  (loop [n 0
+         m 0
+         board-s ""]
+    (if (> n 11)
+      board-s
+        (if (<= m 11)
+          (recur n (inc m) (cond
+                             (is-cell-busy? board n m)  (str board-s ".")
+                             (is-cell-empty? board n m) (str board-s ".")
+                             (is-cell-alive? board n m) (str board-s ".")
+                             (is-cell-dead? board n m)  (str board-s "*")))
+          (recur (inc n) 0 (str board-s "\n"))))))
 
 
 (defn -main
   "Run that game :)"
   [& args]
-  (println (-> (make-empty-board)
-               (make-border)
-               (place-ship 4)
-               (place-ship 3)
-               (place-ship 3)
-               (place-ship 2)
-               (place-ship 2)
-               (place-ship 2)
-               (place-ship 1)
-               (place-ship 1)
-               (place-ship 1)
-               (place-ship 1)
-               (make-board-text))))
+  (let [board (setup-board)]
+      (println (make-board-debug-text board))
+      (println (make-board-user-text board))
+    ))
