@@ -2,7 +2,7 @@
   (:require [clojure.test :refer :all]
             [seabattle.core :refer :all]
             [seabattle.setup :refer :all]
-            [seabattle.logicals :refer :all]))
+            [seabattle.interaction :refer :all]))
 
 
 (def empty-board

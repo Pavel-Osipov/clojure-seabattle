@@ -5,5 +5,5 @@
 
 (deftest letter-convertion
   (testing "Letter conversion works good"
-    (is (= (letter-to-num "#") false) "Wrong char is not false")
+    (is (= (letter-to-num "#") nil) "Wrong char is not nil")
     (is (= (letter-to-num "a") 1) "Letter 'a' is not 1")))
