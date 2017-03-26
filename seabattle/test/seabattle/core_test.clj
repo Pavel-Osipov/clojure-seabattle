@@ -47,4 +47,10 @@
   (testing "Board has good border"
     (let [board (make-border (make-empty-board))]
     (is (= (count (make-board-debug-text board))  (count board-with-border)) "Wrong board text count")
-    (is (= (make-board-debug-text board) board-with-border) "Wrong board text by itself"))))
+    (is (= (make-board-debug-text board) board-with-border) "Wrong board text by itself")))
+
+  (testing "Alive ships count"
+    (let [board (setup-board)]
+    (is (= 20 (:alive-ships board))))))
+
+
