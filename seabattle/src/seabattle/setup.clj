@@ -1,4 +1,5 @@
-(ns seabattle.setup)
+(ns seabattle.setup
+  (:require [seabattle.logicals :refer :all]))
 
 (defn make-empty-board
   "Makes empty board as hashmap, returns board"
@@ -35,9 +36,9 @@
          m other]
     (if (> d (+ ship-size 2))
       (if (= ship-type :hor)
-          (assoc new-board (vector m (dec start)) :busy
+          (assoc new-board (vector m (dec start))         :busy
                            (vector m (+ start ship-size)) :busy)
-          (assoc new-board (vector (dec start) m) :busy
+          (assoc new-board (vector (dec start) m)         :busy
                            (vector (+ start ship-size) m) :busy))
       (recur (if (= ship-type :hor)
                  (assoc new-board (vector (dec m) n) :busy
@@ -63,7 +64,6 @@
              (inc r)
              c))))
 
-
 (defn place-ship-horizontal
   "Places 4-cell ship horizontally, assumed that it's possible
   Returs new board."
@@ -78,3 +78,55 @@
              (inc d)
              r
              (inc c)))))
+
+(defn can-place-ship-vertical?
+  "Tests if ship with given size can be placed vertically with given top point"
+  [board toprow ncol ship-size]
+   (loop [r toprow
+          d 1
+          ans true]
+      (if (> d ship-size)
+          ans
+          (recur (inc r) (inc d) (and ans (is-cell-empty? board r ncol))))))
+
+(defn can-place-ship-horizontal?
+  "Tests if ship with given size can be placed horizontally with given left point"
+  [board nrow leftcol ship-size]
+   (loop [c leftcol
+          d 1
+          ans true]
+      (if (> d ship-size)
+          ans
+          (recur (inc c) (inc d) (and ans (is-cell-empty? board nrow c))))))
+
+(defn place-ship
+   "Places ship on the board, in random place and returns new board"
+  [board ship-size]
+  (let [direction  (rand-int 2)
+        other (inc (rand-int 10))
+        start (inc (rand-int 7))]
+    (cond
+      (= 0 direction) (if (can-place-ship-vertical? board start other ship-size)
+                          (place-ship-vertical board ship-size start other)
+                          (place-ship board ship-size))
+      (= 1 direction) (if (can-place-ship-horizontal? board other start ship-size)
+                          (place-ship-horizontal board ship-size start other)
+                          (place-ship board ship-size)))))
+
+
+(defn setup-board
+  "Takes no parameters, returns border with all the ships on"
+  []
+  (->  (make-empty-board)
+       (make-border)
+       (place-ship 4)
+       (place-ship 3)
+       (place-ship 3)
+       (place-ship 2)
+       (place-ship 2)
+       (place-ship 2)
+       (place-ship 1)
+       (place-ship 1)
+       (place-ship 1)
+       (place-ship 1)))
+
