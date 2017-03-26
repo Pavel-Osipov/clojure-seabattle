@@ -25,37 +25,38 @@
 
 (defn can-place-ship-vertical?
   "Tests if ship with given size can be placed vertically with given top point"
-  [board toprow col size]
+  [board toprow ncol ship-size]
    (loop [r toprow
           d 1
           ans true]
-      (if (> d size)
+      (if (> d ship-size)
           ans
-          (recur (inc r) (inc d) (and ans (is-cell-empty? board r col))))))
+          (recur (inc r) (inc d) (and ans (is-cell-empty? board r ncol))))))
 
 (defn can-place-ship-horizontal?
   "Tests if ship with given size can be placed horizontally with given left point"
-  [board row leftcol size]
+  [board nrow leftcol ship-size]
    (loop [c leftcol
           d 1
           ans true]
-      (if (> d size)
-         ans
-          (recur (inc c) (inc d) (and ans (is-cell-empty? board row c) )))))
+      (if (> d ship-size)
+          ans
+          (recur (inc c) (inc d) (and ans (is-cell-empty? board nrow c) )))))
 
 
-;; TODO create general func to place ship of any size
-
-(defn place-4-ship
-   "Places 4-cell ship on the board, and returns new board.
-   It's assumed that such ships will be placed first."
-  [board]
+(defn place-ship
+   "Places ship on the board, in random place and returns new board"
+  [board ship-size]
   (let [direction  (rand-int 2)
         other (inc (rand-int 10))
         start (inc (rand-int 7))]
     (cond
-      (= 0 direction) (place-ship-vertical board 4 start other)
-      (= 1 direction) (place-ship-horizontal board 4 start other))))
+      (= 0 direction) (if (can-place-ship-vertical? board start other ship-size)
+                          (place-ship-vertical board ship-size start other)
+                          (place-ship board ship-size))
+      (= 1 direction) (if (can-place-ship-horizontal? board other start ship-size)
+                          (place-ship-horizontal board ship-size start other)
+                          (place-ship board ship-size)))))
 
 
 (defn make-board-text
@@ -68,10 +69,10 @@
       board-s
         (if (<= m 11)
           (recur n (inc m) (cond
-                             (is-cell-busy? board n m) (str board-s "#")
+                             (is-cell-busy? board n m)  (str board-s "#")
                              (is-cell-empty? board n m) (str board-s ".")
                              (is-cell-alive? board n m) (str board-s "@")
-                             (is-cell-dead? board n m) (str board-s "*")))
+                             (is-cell-dead? board n m)  (str board-s "*")))
           (recur (inc n) 0 (str board-s "\n"))))))
 
 
@@ -82,6 +83,18 @@
 
 
 (defn -main
-  "I don't do a whole lot ... yet."
+  "Run that game :)"
   [& args]
-  (println (make-board-text (place-4-ship (make-border (make-empty-board))))))
+  (println (-> (make-empty-board)
+               (make-border)
+               (place-ship 4)
+               (place-ship 3)
+               (place-ship 3)
+               (place-ship 2)
+               (place-ship 2)
+               (place-ship 2)
+               (place-ship 1)
+               (place-ship 1)
+               (place-ship 1)
+               (place-ship 1)
+               (make-board-text))))
