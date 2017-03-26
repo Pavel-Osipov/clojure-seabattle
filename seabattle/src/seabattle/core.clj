@@ -1,9 +1,8 @@
 (ns seabattle.core
   (:require [seabattle.setup :refer :all])
   (:require [seabattle.logicals :refer :all])
+  (:require [seabattle.interaction :refer :all])
   (:gen-class))
-
-
 
 
 (defn make-board-debug-text
