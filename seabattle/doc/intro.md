@@ -11,6 +11,6 @@
 ;;
 ;;
 ;;  Also, let's keep a value of ships parts already hit, if this value reaches 4 + 3 + 3 + 2 + 2 + 2 + 1 + 1 + 1 + 1 = 20
-;;  game is over
+;;  game is over. Let it be named :alive-ships
 ;;
 ;;
