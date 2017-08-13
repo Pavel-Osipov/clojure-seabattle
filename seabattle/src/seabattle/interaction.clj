@@ -41,20 +41,18 @@
   "Converts letter to number, if parameter is not a letter returns nil"
   [letter]
   (let [ch (int (first letter))]
-    (if (<= (int \a) ch (int \z))
-      (inc (- (int ch) (int \a)))
-      nil)))
+    (when (<= (int \a) ch (int \z))
+      (inc (- (int ch) (int \a))))))
 
 (defn read-move
-  "Loops until move is QQ -> quit or move is valid.
+  "Loops until move is Q! -> quit or move is valid.
   Returns vector [n m]"
   []
   (let [cmd (read-line)
         letter (first cmd)
         number (rest cmd)]
-    (if (= cmd "QQ")
-        nil
-       (vector (Integer. number) (letter-to-num letter)))))
+    (when-not (= cmd "Q!")
+      (vector (Integer. number) (letter-to-num letter)))))
 
 (defn show-results
   "Shows game outcome"
@@ -65,10 +63,10 @@
 (defn handle-move
   "Tries to handle move, which is given as vector"
   [board [m n]]
-  (when (is-cell-alive? m n)
-      (-> board
-      (assoc (vector m n) :ship-dead)
-      (assoc :alive-ships (dec (:alive-ships board))))))
+  (when (is-cell-alive? board m n)
+    (-> board
+        (assoc (vector m n) :ship-dead)
+        (assoc :alive-ships (dec (:alive-ships board))))))
 
 
 (defn game-loop
@@ -76,12 +74,9 @@
   []
   (let [board (setup-board)]
     (loop [current-board board]
-      (do
-        (println (make-board-user-text current-board))
-        (println "Enter your move as letter and number:")
-        (let [move read-move]
-          (if (= move nil)
-              (show-results)
-              (recur (handle-move current-board move))))))))
-
-
+      (println (make-board-user-text current-board))
+      (println "Enter your move as letter and number:")
+      (let [move read-move]
+        (if (nil? move)
+            (show-results)
+            (recur (handle-move current-board move)))))))

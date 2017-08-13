@@ -7,9 +7,9 @@
   (loop [n 11
          m 11
         board {}]
-    (if ( < n 0)
+    (if (neg? n)
       board
-      (if (> m 0)
+      (if (pos? m)
           (recur n (dec m)  (assoc board [n m] :empty))
           (recur (dec n) 11 (assoc board [n m] :empty))))))
 
@@ -103,7 +103,7 @@
         other (inc (rand-int 10))
         start (inc (rand-int 7))]
     (cond
-      (= 0 direction) (if (can-place-ship-vertical? board start other ship-size)
+      (zero? direction) (if (can-place-ship-vertical? board start other ship-size)
                           (place-ship-vertical board ship-size start other)
                           (place-ship board ship-size))
       (= 1 direction) (if (can-place-ship-horizontal? board other start ship-size)
