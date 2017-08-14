@@ -126,5 +126,6 @@
        (place-ship 1)
        (place-ship 1)
        (place-ship 1)
-       (assoc :alive-ships 20)))
+       (assoc :alive-ships 20)
+       (assoc :moves-left 30)))
 

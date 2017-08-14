@@ -5,12 +5,7 @@
   (:gen-class))
 
 
-
-
 (defn -main
   "Run that game :)"
   [& args]
-  (let [board (setup-board)]
-      (println (make-board-debug-text board))
-      (println (make-board-user-text board))
-    ))
+  (game-loop))

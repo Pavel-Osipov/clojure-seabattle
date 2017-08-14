@@ -26,3 +26,7 @@
   [board n m]
   (= :ship-dead (get-cell board n m)))
 
+(defn is-cell-fired?
+  "Tests if given cell was shoot at already"
+  [board n m]
+  (= :fired (get-cell board n m)))
