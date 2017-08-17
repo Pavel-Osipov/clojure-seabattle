@@ -2,28 +2,20 @@
   (:require [seabattle.logicals :refer :all]))
 
 (defn make-empty-board
-  "Makes empty board as hashmap, returns board"
+  "Makes busy board as hashmap, returns board"
   []
-  (loop [n 11
-         m 11
-        board {}]
-    (if (neg? n)
-      board
-      (if (pos? m)
-          (recur n (dec m)  (assoc board [n m] :empty))
-          (recur (dec n) 11 (assoc board [n m] :empty))))))
+  (let [coords (for [x (range 12)
+                     y (range 12)]
+                    [x y])]
+    (reduce #(assoc %1 %2 :busy) {} coords)))
 
 (defn make-border
-  "Makes :busy border for the board. Returns new board"
+  "Makes empty square inside the board. Returns new board"
   [board]
-  (loop [x 0
-         new-board board]
-    (if (> x 11)
-      new-board
-      (recur (inc x) (assoc new-board (vector x 0 )  :busy
-                                      (vector 0 x )  :busy
-                                      (vector x 11)  :busy
-                                      (vector 11 x)  :busy)))))
+  (let [coords (for [x (range 1 11)
+                     y (range 1 11)]
+                    [x y])]
+    (reduce #(assoc %1 %2 :empty) board coords)))
 
 (defn surround-ship
   "Surround the given ship with :busy cells.
@@ -50,14 +42,14 @@
   "Places ship vertically, assumed that it's possible
   Returs new board."
   [board ship-size start-row ncol]
-  (loop [new-board board
-         cellnum 1
-         r start-row]
-    (if (> cellnum ship-size)
-      (surround-ship new-board :vert ship-size start-row ncol)
-      (recur (assoc new-board (vector r ncol) :ship-alive)
-             (inc cellnum)
-             (inc r)))))
+    (loop [new-board board
+           cellnum 1
+           r start-row]
+      (if (> cellnum ship-size)
+        (surround-ship new-board :vert ship-size start-row ncol)
+        (recur (assoc new-board (vector r ncol) :ship-alive)
+               (inc cellnum)
+               (inc r)))))
 
 (defn place-ship-horizontal
   "Places 4-cell ship horizontally, assumed that it's possible

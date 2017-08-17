@@ -6,18 +6,18 @@
 
 
 (def empty-board
-"............
-............
-............
-............
-............
-............
-............
-............
-............
-............
-............
-............
+"############
+############
+############
+############
+############
+############
+############
+############
+############
+############
+############
+############
 ")
 
 
@@ -49,8 +49,9 @@
     (is (= (count (make-board-debug-text board))  (count board-with-border)) "Wrong board text count")
     (is (= (make-board-debug-text board) board-with-border) "Wrong board text by itself")))
 
-  (testing "Alive ships count"
+  (testing "Alive ships and mpves count"
     (let [board (setup-board)]
-    (is (= 20 (:alive-ships board))))))
+    (is (= 20 (:alive-ships board)))
+    (is (= 30 (:moves-left board))))))
 
 
