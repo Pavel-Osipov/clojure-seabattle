@@ -20,7 +20,6 @@
                              (is-cell-dead? board n m)  (str board-s "*")))
           (recur (inc n) 0 (str board-s "\n"))))))
 
-
 (defn make-board-user-text
   "Prepares the board as single strings and return that string"
   [board]
@@ -38,14 +37,12 @@
                             (is-cell-dead? board n m)  (str board-s "#")))
           (recur (inc n) 1 (str board-s "\n"))))))
 
-
 (defn letter-to-num
   "Converts letter to number, if parameter is not a letter returns nil"
   [letter]
   (let [ch (int letter)]
     (when (<= (int \a) ch (int \z))
       (inc (- (int ch) (int \a))))))
-
 
 (defn read-move
   "Loops until move is Q! -> quit or move is valid.
