@@ -12,13 +12,13 @@
          board-s ""]
     (if (> n 11)
       board-s
-        (if (<= m 11)
-          (recur n (inc m) (cond
-                             (is-cell-busy? board n m)  (str board-s "#")
-                             (is-cell-empty? board n m) (str board-s ".")
-                             (is-cell-alive? board n m) (str board-s "@")
-                             (is-cell-dead? board n m)  (str board-s "*")))
-          (recur (inc n) 0 (str board-s "\n"))))))
+      (if (<= m 11)
+        (recur n (inc m) (cond
+                           (is-cell-busy? board n m)  (str board-s "#")
+                           (is-cell-empty? board n m) (str board-s ".")
+                           (is-cell-alive? board n m) (str board-s "@")
+                           (is-cell-dead? board n m)  (str board-s "*")))
+        (recur (inc n) 0 (str board-s "\n"))))))
 
 (defn make-board-user-text
   "Prepares the board as single strings and return that string"
@@ -29,13 +29,13 @@
     (if (> n 10)
       board-s
       (if (<= m 10)
-          (recur n (inc m) (cond
-                            (is-cell-busy? board n m)  (str board-s ".")
-                            (is-cell-empty? board n m) (str board-s ".")
-                            (is-cell-alive? board n m) (str board-s ".")
-                            (is-cell-fired? board n m) (str board-s "*")
-                            (is-cell-dead? board n m)  (str board-s "#")))
-          (recur (inc n) 1 (str board-s "\n"))))))
+        (recur n (inc m) (cond
+                           (is-cell-busy? board n m)  (str board-s ".")
+                           (is-cell-empty? board n m) (str board-s ".")
+                           (is-cell-alive? board n m) (str board-s ".")
+                           (is-cell-fired? board n m) (str board-s "*")
+                           (is-cell-dead? board n m)  (str board-s "#")))
+        (recur (inc n) 1 (str board-s "\n"))))))
 
 (defn letter-to-num
   "Converts letter to number, if parameter is not a letter returns nil"
@@ -68,8 +68,8 @@
   [board]
   (println "**** The game is over!")
   (if (zero? (:alive-ships board))
-      (println "You win, gratz!")
-      (println "You lost or gave up!")))
+    (println "You win, gratz!")
+    (println "You lost or gave up!")))
 
 (defn handle-move
   "Tries to handle move, which is given as vector"
@@ -79,10 +79,10 @@
         m (second move)
         new-board (assoc board :moves-left (dec moves))]
     (if (is-cell-alive? new-board n m)
-        (-> new-board
+      (-> new-board
           (assoc move :ship-dead)
           (assoc :alive-ships (dec (:alive-ships new-board))))
-        (assoc new-board move :fired))))
+      (assoc new-board move :fired))))
 
 (defn game-loop
   "Performs main game loop"
@@ -98,5 +98,5 @@
       (let [move (read-move)]
         (flush)
         (if (or (nil? move) (zero? (:moves-left current-board)) (zero? (:alive-ships current-board)))
-            (show-results current-board)
-            (recur (handle-move current-board move)))))))
+          (show-results current-board)
+          (recur (handle-move current-board move)))))))
