@@ -4,7 +4,6 @@
   (:require [seabattle.interaction :refer :all])
   (:gen-class))
 
-
 (defn -main
   "Run that game :)"
   [& args]

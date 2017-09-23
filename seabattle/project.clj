@@ -15,4 +15,5 @@
     {:uberjar {:aot :all}
      :dev
       [{:plugins [[lein-kibit "0.1.3"]
-                  [jonase/eastwood "0.2.3"]]}]})
+                  [jonase/eastwood "0.2.3"]
+                  [lein-cljfmt "0.5.7"]]}]})
